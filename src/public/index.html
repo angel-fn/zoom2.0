@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMISOR</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src ="login.js"> </script>
+    
+</head>
+<body>
+    <header></header>
+    <nav class="navbar navbar-light navbar-expand-md">
+        <div class="container-fluid"><a class="navbar-brand" href="#">ESIME STREAMING</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="https://www.youtube.com/channel/UCXnQrwuBL8rUmqip9uOfnBw">Youtube</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="https://www.facebook.com/angel.gel.1610">Facebook</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="https://www.instagram.com/_angel.fn_/?hl=es-la">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1 style="color:white; font-size:100px">ZOOMESTREZ</h1>
+    <body style="background-color:green;"></body> 
+    <button id="btn">Emitir</button>
+    <video src="" id="video" style="width: 800px; height: 600px;"
+autoplay="true"></video>
+    <canvas id="preview"></canvas>
+    <div class="status"></div>
+    <input type="button" id="boton3" value="CHAT EN VIVO" onclick=" chat()">
+
+
+    <script>
+
+        var canvas = document.querySelector('#preview');
+        var context = canvas.getContext('2d' );
+        var btn = document.querySelector('#btn');
+        
+        canvas.style.display= 'none';
+        canvas.width = 512;
+        canvas.height = 384;
+
+        context.width = canvas.width;
+        context.height = canvas.height;
+
+        var video = document.querySelector('#video');
+
+        var socket = io();
+
+        function publicarMensaje (msg) {
+            document.querySelector('.status').innerText = msg;
+        }
+
+        function loadCamara (stream) {
+            video.srcObject = stream;
+            publicarMensaje('STREAMING EN DIRECTO  VIEWERS: 539');
+        }
+
+        function errorCamara() {
+            publicarMensaje('camara ha fallado');
+        }
+
+        function verVideo (video, context) {
+            context.drawImage (video, 0, 0, context.width, context.height);
+            socket.emit('stream', canvas.toDataURL ('image/webp'));
+        }
+
+        btn.addEventListener('click', () => {
+            alert('EL STREAM COMENZARá PRONTO...');
+            navigator.getUserMedia = (navigator.getUserMedia || navigator.
+            webkitGetUserMedia || navigator.mozGetUserMedia || navigator.
+            msgGetUserMedia);
+
+            if (navigator.getUserMedia) {
+                navigator.getUserMedia({ video: true }, loadCamara, errorCamara)
+            }
+
+            var intervalo = setInterval(() => {
+                verVideo(video, context);
+            }, 310);
+        })
+        
+    </script>
+
+    
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+<script src="assets/js/script.js"></script>
+</div>
+</div>
+         
+
+    
+</body>
+</html>
